@@ -62,7 +62,9 @@ public class FiremanAiState extends AiState implements SimpleSearchDelegate {
 					return factory.moveAction(bot.getPosition(), pathFinder.next());
 				}
 			}
-		} else if(this.isPointGoal(bot.getPosition())) {
+		}
+		
+		if(this.isPointGoal(bot.getPosition())) {
 			ArrayList<Point> pointsAround = this.getWorld().pointsArountPoint(bot.getPosition());
 			for(Point nearPoint : pointsAround) {
 				Model model = this.getWorld().objectAtPosition(nearPoint);

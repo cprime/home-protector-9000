@@ -64,7 +64,7 @@ public class ActionFactory {
 		action.setActor(this.bot);
 		action.setActorPosition(from);
 		action.setTargetPosition(to);
-		
+
 		return action;
 	}
 	

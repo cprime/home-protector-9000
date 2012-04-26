@@ -4,7 +4,6 @@ import java.awt.Component;
 import java.awt.Font;
 import java.awt.Point;
 import java.util.ArrayList;
-import java.util.Date;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -66,7 +65,7 @@ public class HomeProtectorFrame extends JFrame implements ActionsPanelDelegate, 
 		this.worldModel.setStation(baseStation);
 		
 		ArrayList<Point> openPoints = openPoints();
-		Random generator = new Random(new Date().getTime());
+		Random generator = new Random();
 		//add dirt
 		for(int i = 0; i < 20 && !openPoints.isEmpty(); i++) {
 			int r = Math.abs(generator.nextInt()) % openPoints.size();
@@ -192,7 +191,7 @@ public class HomeProtectorFrame extends JFrame implements ActionsPanelDelegate, 
 	private Point getRandomOpenSpace() {
 		ArrayList<Point> openPoints = openPoints();
 		if(openPoints.size() > 0) {
-			Random generator = new Random(new Date().getTime());
+			Random generator = new Random();
 			return openPoints.get(Math.abs(generator.nextInt()) % openPoints.size());
 		}
 		return null;
@@ -201,7 +200,7 @@ public class HomeProtectorFrame extends JFrame implements ActionsPanelDelegate, 
 	//StageBasedLoopDelegate methods
 	public void stage1() {
 		if(randomActionsEnabled) {
-			Random generator = new Random(new Date().getTime());
+			Random generator = new Random();
 			int r = Math.abs(generator.nextInt()) % 100;
 			double p = randomActionProbability * 100;
 			
