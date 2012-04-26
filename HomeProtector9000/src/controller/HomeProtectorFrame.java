@@ -137,7 +137,7 @@ public class HomeProtectorFrame extends JFrame implements ActionsPanelDelegate, 
 		inventoryLabel.setBounds(720, 130, 150, 40);
 		inventoryLabel.setFont(font);
 		this.add(inventoryLabel);
-		inventoryValue = new JLabel("Unequiped", (int)Component.CENTER_ALIGNMENT);
+		inventoryValue = new JLabel("Unequipped", (int)Component.CENTER_ALIGNMENT);
 		inventoryValue.setBounds(720, 170, 150, 30);
 		inventoryValue.setFont(font);
 		this.add(inventoryValue);
@@ -166,9 +166,9 @@ public class HomeProtectorFrame extends JFrame implements ActionsPanelDelegate, 
 		}
 		
 		if(b.hasExtinguisher()) {
-			this.inventoryValue.setText("Equiped");
+			this.inventoryValue.setText("Equipped");
 		} else {
-			this.inventoryValue.setText("Unequiped");
+			this.inventoryValue.setText("Unequipped");
 		}
 		
 		this.energyValue.repaint();

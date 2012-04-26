@@ -33,8 +33,16 @@ public class EnergyLevelPanel extends JPanel {
 		g.setColor(Color.WHITE);
 		g.fillRect(1, 1, this.getWidth() - 2, this.getHeight() - 2);
 		
-		if(bot.getPowerLevel() > 0) { 
-			g.setColor(Color.RED);
+		if(bot.getPowerLevel() > 0) {
+			if(bot.getPowerLevel() > 60) {
+				g.setColor(Color.GREEN);
+			} else if(bot.getPowerLevel() > 30) {
+				g.setColor(Color.YELLOW);
+			} else if(bot.getPowerLevel() > 15) {
+				g.setColor(Color.ORANGE);
+			} else {
+				g.setColor(Color.RED);
+			}
 			int scaledWidth = (int)((this.getWidth() - 2) * (bot.getPowerLevel() / (float)bot.getPowerLimit()));
 			g.fillRect(1, 1, scaledWidth, this.getHeight() - 2);
 		}

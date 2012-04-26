@@ -12,6 +12,8 @@ public interface Bot {
 	public void setX(int x);
 	public int getY();
 	public void setY(int y);
+	public Direction getDirection();
+	public void setDirection(Direction d);
 	public Point getPosition();
 	public void moveTo(int x, int y);
 	public void moveBy(int dx, int dy);

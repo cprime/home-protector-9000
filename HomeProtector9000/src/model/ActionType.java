@@ -8,6 +8,8 @@ public enum ActionType {
 	CHARGE,
 	PICKUP,
 	REPLACE,
+	TURNCLOCKWISE,
+	TURNCOUNTERCLOCKWISE,
 	MOVE,
 	;
 }

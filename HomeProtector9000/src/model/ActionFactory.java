@@ -68,6 +68,22 @@ public class ActionFactory {
 		return action;
 	}
 	
+	public Action turnClockwiseAction() {
+		Action action = new Action();
+		action.setActionType(ActionType.TURNCLOCKWISE);
+		action.setActor(this.bot);
+		
+		return action;
+	}
+	
+	public Action turnCounterClockwiseAction() {
+		Action action = new Action();
+		action.setActionType(ActionType.TURNCOUNTERCLOCKWISE);
+		action.setActor(this.bot);
+		
+		return action;
+	}
+	
 	public Action waitAction() {
 		Action action = new Action();
 		action.setActionType(ActionType.WAIT);

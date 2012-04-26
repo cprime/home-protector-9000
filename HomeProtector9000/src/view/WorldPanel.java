@@ -5,8 +5,6 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Toolkit;
-import java.util.Date;
-import java.util.Random;
 
 import javax.swing.JPanel;
 
@@ -66,13 +64,23 @@ public class WorldPanel extends JPanel {
 	private void drawModel(Graphics g, Model m) {
 		if(m instanceof ProtectorBot) {
 			ProtectorBot b = (ProtectorBot)m;
+			
+			String mode = "small";
 			if(b.hasExtinguisher()) {
-				Image img = Toolkit.getDefaultToolkit().getImage("ImagesForProject/icleanerhatfront.png");
-				g.drawImage(img, b.getX() * tileWidth + 2, b.getY() * tileHeight + 2, this);
-			} else {
-				Image img = Toolkit.getDefaultToolkit().getImage("ImagesForProject/icleanersmallfront.png");
-				g.drawImage(img, b.getX() * tileWidth + 2, b.getY() * tileHeight + 2, this);
+				mode = "hat";
 			}
+			
+			String direction = "front";
+			if(b.getDirection() == Direction.NORTH) {
+				direction = "back";
+			} else if(b.getDirection() == Direction.EAST) {
+				direction = "right";
+			} else if(b.getDirection() == Direction.WEST) {
+				direction = "left";
+			}
+			
+			Image img = Toolkit.getDefaultToolkit().getImage(new String("ImagesForProject/icleaner" + mode + direction + ".png"));
+			g.drawImage(img, b.getX() * tileWidth + 2, b.getY() * tileHeight + 2, this);
 		} else if(m instanceof Fire) {
 			Image img = Toolkit.getDefaultToolkit().getImage("ImagesForProject/fire.gif");
 			g.drawImage(img, m.getX() * tileWidth + 2, m.getY() * tileHeight + 2, this);
@@ -94,8 +102,8 @@ public class WorldPanel extends JPanel {
 			}
 			g.drawImage(img, m.getX() * tileWidth + 2, m.getY() * tileHeight + 2, this);
 		} else if(m instanceof BaseStation) {
-			g.setColor(Color.LIGHT_GRAY);
-			g.fillRect(m.getX() * tileWidth + 4, m.getY() * tileHeight + 4, tileWidth - 8, tileHeight - 8);
+			Image img = Toolkit.getDefaultToolkit().getImage("ImagesForProject/power.png");
+			g.drawImage(img, m.getX() * tileWidth + 2, m.getY() * tileHeight + 2, this);
 
 			GroundObject t = (GroundObject)m;
 			if(t.getStackedObject() != null) {
@@ -104,7 +112,7 @@ public class WorldPanel extends JPanel {
 
 			BaseStation b = (BaseStation)m;
 			if(b.hasExtinguisher()) {
-				Image img = Toolkit.getDefaultToolkit().getImage("ImagesForProject/firehat.png");
+				img = Toolkit.getDefaultToolkit().getImage("ImagesForProject/firehat.png");
 				g.drawImage(img, m.getX() * tileWidth, m.getY() * tileHeight, this);
 			}
 		}

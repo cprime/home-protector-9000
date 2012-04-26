@@ -46,7 +46,9 @@ public class NormalAiState extends AiState implements SimpleSearchDelegate {
 		World w = this.getWorld();
 		Model m = null;
 		
-		if(this.goal != null) {
+		if((m = w.objectAtPosition(bot.getPosition())) != bot && m instanceof Dirt) {
+			return factory.suckAction(m);
+		} else if(this.goal != null) {
 			if(bot.getPosition().equals(this.goal)) {
 				m = w.objectAtPosition(this.goal);
 				if(m != null && m instanceof Dirt) {
@@ -59,8 +61,6 @@ public class NormalAiState extends AiState implements SimpleSearchDelegate {
 					return factory.moveAction(bot.getPosition(), pathFinder.next());
 				}
 			}
-		} else if((m = w.objectAtPosition(bot.getPosition())) != bot && m instanceof Dirt) {
-			return factory.suckAction(m);
 		}
 		return setupNewGoal();
 	}

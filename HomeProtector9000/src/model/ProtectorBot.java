@@ -12,6 +12,14 @@ public class ProtectorBot extends Model implements Bot {
 	private int powerLevel;
 	private boolean hasExtinguisher;
 	private AiState aiState;
+	private Direction direction;
+	
+	public Direction getDirection() {
+		return this.direction;
+	}
+	public void setDirection(Direction d) {
+		this.direction = d;
+	}
 	
 	public void setAiState(AiState state) {
 		this.aiState = state;
@@ -51,6 +59,7 @@ public class ProtectorBot extends Model implements Bot {
 		
 		setPowerLevel(fullyChargedPowerLevel);
 		setHasExtinguisher(false);
+		setDirection(Direction.SOUTH);
 	}
 
 	public ArrayList<Action> validActions(World w) {

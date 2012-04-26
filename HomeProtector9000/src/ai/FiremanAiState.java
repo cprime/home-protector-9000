@@ -46,7 +46,15 @@ public class FiremanAiState extends AiState implements SimpleSearchDelegate {
 		Bot bot = this.getBot();
 		World w = this.getWorld();
 		
-		if(this.goal != null) {
+		if(this.isPointGoal(bot.getPosition())) {
+			ArrayList<Point> pointsAround = this.getWorld().pointsArountPoint(bot.getPosition());
+			for(Point nearPoint : pointsAround) {
+				Model model = this.getWorld().objectAtPosition(nearPoint);
+				if(model instanceof Fire)  {
+					return factory.blowAction(model);
+				}
+			}
+		} else if(this.goal != null) {
 			if(bot.getPosition().equals(this.goal)) {
 				ArrayList<Point> pointsAround = this.getWorld().pointsArountPoint(bot.getPosition());
 				for(Point nearPoint : pointsAround) {
@@ -64,15 +72,6 @@ public class FiremanAiState extends AiState implements SimpleSearchDelegate {
 			}
 		}
 		
-		if(this.isPointGoal(bot.getPosition())) {
-			ArrayList<Point> pointsAround = this.getWorld().pointsArountPoint(bot.getPosition());
-			for(Point nearPoint : pointsAround) {
-				Model model = this.getWorld().objectAtPosition(nearPoint);
-				if(model instanceof Fire)  {
-					return factory.blowAction(model);
-				}
-			}
-		}
 		return setupNewGoal();
 	}
 	
