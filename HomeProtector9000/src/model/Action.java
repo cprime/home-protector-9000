@@ -6,8 +6,8 @@ public class Action {
 	private ActionType actionType;
 	private Bot actor;
 	private Model target;
-	private Point actorPosition;
-	private Point targetPosition;
+	private Point actorPoint;
+	private Point targetPoint;
 	
 	public Bot getActor() {
 		return actor;
@@ -21,11 +21,11 @@ public class Action {
 	public void setTarget(Model target) {
 		this.target = target;
 	}
-	public Point getTargetPosition() {
-		return targetPosition;
+	public Point getTargetPoint() {
+		return targetPoint;
 	}
-	public void setTargetPosition(Point targetPosition) {
-		this.targetPosition = targetPosition;
+	public void setTargetPoint(Point targetPoint) {
+		this.targetPoint = targetPoint;
 	}
 	public ActionType getActionType() {
 		return actionType;
@@ -34,11 +34,11 @@ public class Action {
 		this.actionType = actionType;
 	}
 	
-	public Point getActorPosition() {
-		return actorPosition;
+	public Point getActorPoint() {
+		return actorPoint;
 	}
-	public void setActorPosition(Point actorPosition) {
-		this.actorPosition = actorPosition;
+	public void setActorPoint(Point actorPoint) {
+		this.actorPoint = actorPoint;
 	}
 	public Action() {
 		super();
@@ -51,17 +51,17 @@ public class Action {
 			case WAIT:
 				return new String("<Wait>");
 			case SUCK:
-				return new String("<Suck " + this.target + " at " + this.targetPosition + ">");
+				return new String("<Suck " + this.target + " at " + this.targetPoint + ">");
 			case BLOW:
-				return new String("<Blow on " + this.target + " at " + this.targetPosition + ">");
+				return new String("<Blow on " + this.target + " at " + this.targetPoint + ">");
 			case CHARGE:
-				return new String("<Charge from " + this.target + " at " + this.targetPosition + ">");
+				return new String("<Charge from " + this.target + " at " + this.targetPoint + ">");
 			case PICKUP:
-				return new String("<Pickup from " + this.target + " at " + this.targetPosition + ">");
+				return new String("<Pickup from " + this.target + " at " + this.targetPoint + ">");
 			case REPLACE:
-				return new String("<Replace to " + this.target + " at " + this.targetPosition + ">");
+				return new String("<Replace to " + this.target + " at " + this.targetPoint + ">");
 			case MOVE:
-				return new String("<Move " + actorPosition + " to " + this.targetPosition + ">");
+				return new String("<Move " + actorPoint + " to " + this.targetPoint + ">");
 		}
 		return null;
 	}

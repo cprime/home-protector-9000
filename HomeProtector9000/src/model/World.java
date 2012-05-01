@@ -157,17 +157,17 @@ public class World {
 		}
 	}
 	public void executeSuckAction(Action a) {
-		Point p = a.getTargetPosition();
+		Point p = a.getTargetPoint();
 		this.worldGrid[p.y][p.x] = (Model)(a.getActor());
 	}
 	public void executeBlowAction(Action a) {
-		Point p = a.getTargetPosition();
+		Point p = a.getTargetPoint();
 		this.worldGrid[p.y][p.x] = null;
 	}
 	public void executeChargeAction(Action a) {
-		Model targetModel = this.objectAtPosition(a.getTargetPosition());
+		Model targetModel = this.objectAtPosition(a.getTargetPoint());
 		ProtectorBot bot = (ProtectorBot)a.getActor();
-		if(targetModel.getPosition().equals(bot.getPosition())) {
+		if(targetModel.getPoint().equals(bot.getPoint())) {
 			bot.chargeBattery();
 		}
 	}
@@ -186,8 +186,8 @@ public class World {
 		station.setHasExtinguisher(true);
 	}
 	public void executeMoveAction(Action a) {
-		Model startingModel = this.objectAtPosition(a.getActorPosition());
-		Model targetModel = this.objectAtPosition(a.getTargetPosition());
+		Model startingModel = this.objectAtPosition(a.getActorPoint());
+		Model targetModel = this.objectAtPosition(a.getTargetPoint());
 		ProtectorBot bot = (ProtectorBot)a.getActor();
 		
 		if(startingModel instanceof GroundObject) {
@@ -197,7 +197,7 @@ public class World {
 			this.worldGrid[bot.getY()][bot.getX()] = null;
 		}
 		
-		bot.moveTo((int)a.getTargetPosition().getX(), (int)a.getTargetPosition().getY());
+		bot.moveTo((int)a.getTargetPoint().getX(), (int)a.getTargetPoint().getY());
 		
 		if(targetModel instanceof GroundObject) {
 			((GroundObject)targetModel).setStackedObject(bot);

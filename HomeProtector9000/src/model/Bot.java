@@ -14,7 +14,7 @@ public interface Bot {
 	public void setY(int y);
 	public Direction getDirection();
 	public void setDirection(Direction d);
-	public Point getPosition();
+	public Point getPoint();
 	public void moveTo(int x, int y);
 	public void moveBy(int dx, int dy);
 	public void setAiState(AiState state);

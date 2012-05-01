@@ -22,7 +22,7 @@ public class FiremanAiState extends AiState implements SimpleSearchDelegate {
 	}
 	
 	public Action setupNewGoal() {
-		Point start = this.getBot().getPosition();
+		Point start = this.getBot().getPoint();
 		AStarSearch pathFinder = this.getPathFinder();
 		ActionFactory factory = this.getFactory();
 		
@@ -46,8 +46,8 @@ public class FiremanAiState extends AiState implements SimpleSearchDelegate {
 		Bot bot = this.getBot();
 		World w = this.getWorld();
 		
-		if(this.isPointGoal(bot.getPosition())) {
-			ArrayList<Point> pointsAround = this.getWorld().pointsArountPoint(bot.getPosition());
+		if(this.isPointGoal(bot.getPoint())) {
+			ArrayList<Point> pointsAround = this.getWorld().pointsArountPoint(bot.getPoint());
 			for(Point nearPoint : pointsAround) {
 				Model model = this.getWorld().objectAtPosition(nearPoint);
 				if(model instanceof Fire)  {
@@ -55,8 +55,8 @@ public class FiremanAiState extends AiState implements SimpleSearchDelegate {
 				}
 			}
 		} else if(this.goal != null) {
-			if(bot.getPosition().equals(this.goal)) {
-				ArrayList<Point> pointsAround = this.getWorld().pointsArountPoint(bot.getPosition());
+			if(bot.getPoint().equals(this.goal)) {
+				ArrayList<Point> pointsAround = this.getWorld().pointsArountPoint(bot.getPoint());
 				for(Point nearPoint : pointsAround) {
 					Model model = this.getWorld().objectAtPosition(nearPoint);
 					if(model instanceof Fire)  {
@@ -67,7 +67,7 @@ public class FiremanAiState extends AiState implements SimpleSearchDelegate {
 				}
 			} else {
 				if(this.validMovePosition(w, pathFinder.peek())) {
-					return factory.moveAction(bot.getPosition(), pathFinder.next());
+					return factory.moveAction(bot.getPoint(), pathFinder.next());
 				}
 			}
 		}

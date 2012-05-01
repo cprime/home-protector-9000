@@ -18,7 +18,7 @@ public abstract class Model {
 	public void setY(int y) {
 		this.y = y;
 	}
-	public Point getPosition() {
+	public Point getPoint() {
 		return new Point(x, y);
 	}
 

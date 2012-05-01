@@ -14,7 +14,7 @@ public class ActionFactory {
 		action.setActionType(ActionType.SUCK);
 		action.setActor(this.bot);
 		action.setTarget(target);
-		action.setTargetPosition(target.getPosition());
+		action.setTargetPoint(target.getPoint());
 		
 		return action;
 	}
@@ -24,7 +24,7 @@ public class ActionFactory {
 		action.setActionType(ActionType.BLOW);
 		action.setActor(this.bot);
 		action.setTarget(target);
-		action.setTargetPosition(target.getPosition());
+		action.setTargetPoint(target.getPoint());
 		
 		return action;
 	}
@@ -33,7 +33,7 @@ public class ActionFactory {
 		Action action = new Action();
 		action.setActionType(ActionType.CHARGE);
 		action.setActor(this.bot);
-		action.setTargetPosition(target.getPosition());
+		action.setTargetPoint(target.getPoint());
 		
 		return action;
 	}
@@ -43,7 +43,7 @@ public class ActionFactory {
 		action.setActionType(ActionType.PICKUP);
 		action.setActor(this.bot);
 		action.setTarget(target);
-		action.setTargetPosition(target.getPosition());
+		action.setTargetPoint(target.getPoint());
 		
 		return action;
 	}
@@ -53,7 +53,7 @@ public class ActionFactory {
 		action.setActionType(ActionType.REPLACE);
 		action.setActor(this.bot);
 		action.setTarget(target);
-		action.setTargetPosition(target.getPosition());
+		action.setTargetPoint(target.getPoint());
 		
 		return action;
 	}
@@ -62,8 +62,8 @@ public class ActionFactory {
 		Action action = new Action();
 		action.setActionType(ActionType.MOVE);
 		action.setActor(this.bot);
-		action.setActorPosition(from);
-		action.setTargetPosition(to);
+		action.setActorPoint(from);
+		action.setTargetPoint(to);
 
 		return action;
 	}

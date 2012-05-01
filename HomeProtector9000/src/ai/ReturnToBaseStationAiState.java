@@ -20,15 +20,15 @@ public abstract class ReturnToBaseStationAiState extends AiState {
 		World w = this.getWorld();
 		BaseStation station = w.getStation();
 		
-		if(station.getPosition().equals(bot.getPosition())) {
+		if(station.getPoint().equals(bot.getPoint())) {
 			return this.baseStationAction();
 		}
 		else if(!pathFinder.isInitialized() || !this.validMovePosition(w, pathFinder.peek())) {
-			pathFinder.initializeAStarPath(bot.getPosition(), station.getPosition());
+			pathFinder.initializeAStarPath(bot.getPoint(), station.getPoint());
 		}
 		
 		if(this.validMovePosition(w, pathFinder.peek())) {
-			return factory.moveAction(bot.getPosition(), pathFinder.next());
+			return factory.moveAction(bot.getPoint(), pathFinder.next());
 		}
 		
 		System.out.println(bot + " is now blocked while returning to base. Waiting for the user to un-block him.");
