@@ -12,13 +12,26 @@ public class ProtectorBot extends Model implements Bot {
 	private int powerLevel;
 	private boolean hasExtinguisher;
 	private AiState aiState;
-	private Direction direction;
+	private Position position;
+	
+	public void setPosition(Point p, Direction d) {
+		super.setX(p.x);
+		super.setY(p.y);
+		
+		this.setPosition(new Position(p, d));
+	}
+	public void setPosition(Position position) {
+		this.position = position;
+	}
+	public Position getPosition() {
+		return position;
+	}
 	
 	public Direction getDirection() {
-		return this.direction;
+		return this.position.direction;
 	}
 	public void setDirection(Direction d) {
-		this.direction = d;
+		this.position.direction = d;
 	}
 	
 	public void setAiState(AiState state) {
