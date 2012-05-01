@@ -3,7 +3,9 @@ package ai;
 import java.awt.Point;
 import java.util.ArrayList;
 
+import model.Direction;
 import model.Model;
+import model.Position;
 import model.World;
 
 public class AStarSearch {
@@ -11,7 +13,7 @@ public class AStarSearch {
 	
 	private World world;
 	private AStarSearchDelegate delegate;
-	private ArrayList<Point> path;
+	private ArrayList<Position> path;
 	private boolean initialized;
 	
 	public World getWorld() {
@@ -20,7 +22,7 @@ public class AStarSearch {
 	public void setWorld(World world) {
 		this.world = world;
 	}
-	public ArrayList<Point> getPath() {
+	public ArrayList<Position> getPath() {
 		return path;
 	}
 
@@ -43,29 +45,61 @@ public class AStarSearch {
 		this.initialized = false;
 	}
 	
-	public ArrayList<Point> positionsToExpandAroundPoint(Point p) {
-		ArrayList<Point> ret = new ArrayList<Point>();
+	public ArrayList<Position> positionsToExpandAroundPoint(Position p) {
+		ArrayList<Position> ret = new ArrayList<Position>();
 		
-		ArrayList<Point> basic = world.pointsArountPoint(p);
-		for(Point pointToAdd : basic) {
-			Model model = world.objectAtPosition(pointToAdd);
+		Point forward = null;
+		switch(p.direction) {
+		case NORTH:
+			forward = new Point(p.point.x, p.point.y - 1);
+			ret.add(new Position(p.point, Direction.EAST));
+			ret.add(new Position(p.point, Direction.WEST));
+			break;
+		case SOUTH:
+			forward = new Point(p.point.x, p.point.y + 1);
+			ret.add(new Position(p.point, Direction.EAST));
+			ret.add(new Position(p.point, Direction.WEST));
+			break;
+		case EAST:
+			forward = new Point(p.point.x + 1, p.point.y);
+			ret.add(new Position(p.point, Direction.NORTH));
+			ret.add(new Position(p.point, Direction.SOUTH));
+			break;
+		case WEST:
+			forward = new Point(p.point.x - 1, p.point.y);
+			ret.add(new Position(p.point, Direction.NORTH));
+			ret.add(new Position(p.point, Direction.SOUTH));
+			break;
+			default:
+				break;
+		}
+	
+		if(forward.x < this.world.getWidth() && forward.y < this.world.getHeight() && forward.x >= 0 && forward.y >= 0) {
+			Model model = world.objectAtPosition(forward);
 			if(model == null || model.canStackObject()) {
-				ret.add(pointToAdd);
+				ret.add(0, new Position(forward, p.direction));
 			}
 		}
 		
 		return ret;
 	}
 	
+	public boolean positionIsGoal(Position position, Position goal) {
+		if(goal.direction == Direction.UNKNOWN || goal.direction == Direction.NONE || goal.direction == position.direction) {
+			return position.point.equals(goal.point);
+		}
+		return false;
+	}
+	
 	//search methods
-	public void initializeAStarPath(Point start, Point goal) {
+	public void initializeAStarPath(Position start, Position goal) {
 		initialized = true;
-		path = new ArrayList<Point>();
+		path = new ArrayList<Position>();
 		
 		ArrayList<AStarNode> openList = new ArrayList<AStarNode>();
 		ArrayList<AStarNode> closedList = new ArrayList<AStarNode>();
 		
-		AStarNode startingNode = new AStarNode(null, start, 0, delegate.heuristic(start, goal));
+		AStarNode startingNode = new AStarNode(null, start, 0, delegate.heuristic(start.point, goal.point));
 		openList.add(startingNode);
 		
 		AStarNode current = null;
@@ -80,25 +114,25 @@ public class AStarSearch {
 			if(current.position.equals(goal)) break;
 			
 			//connections
-			ArrayList<Point> pointsAroundCurrent = this.positionsToExpandAroundPoint(current.position);
-			for(Point endPoint : pointsAroundCurrent) {
-				int endPointCost = current.costSoFar + connectionWeight;
+			ArrayList<Position> pointsAroundCurrent = this.positionsToExpandAroundPoint(current.position);
+			for(Position endPosition : pointsAroundCurrent) {
+				int endPositionCost = current.costSoFar + connectionWeight;
 				
 				//if a node with endPoint has been closed or opened previously, at a higher cost, remove node from closed list and reuse them
 				AStarNode endNode = null;
-				if((endNode = this.previousNodeWithPointInList(closedList, endPoint)) != null) {
-					if(endNode.costSoFar <= endPointCost) continue;
+				if((endNode = this.previousNodeWithPointInList(closedList, endPosition)) != null) {
+					if(endNode.costSoFar <= endPositionCost) continue;
 					closedList.remove(endNode);
-				} else if((endNode = this.previousNodeWithPointInList(openList, endPoint)) != null) {
-					if(endNode.costSoFar <= endPointCost) continue;
+				} else if((endNode = this.previousNodeWithPointInList(openList, endPosition)) != null) {
+					if(endNode.costSoFar <= endPositionCost) continue;
 				} else {
-					endNode = new AStarNode(null, endPoint, -1, -1);
+					endNode = new AStarNode(null, endPosition, -1, -1);
 				}
 				
 				//use/reuse endNode
-				endNode.costSoFar = endPointCost;
+				endNode.costSoFar = endPositionCost;
 				endNode.parent = current;
-				endNode.estimatedTotalCost = endPointCost + delegate.heuristic(endPoint, goal);
+				endNode.estimatedTotalCost = endPositionCost + delegate.heuristic(endPosition.point, goal.point);
 				
 				if(!openList.contains(endNode)) openList.add(endNode);
 			}
@@ -133,16 +167,16 @@ public class AStarSearch {
 		return !path.isEmpty();
 	}
 	
-	public Point peek() {
+	public Position peek() {
 		if(!path.isEmpty()) {
 			return path.get(0);
 		}
 		return null;
 	}
 	
-	public Point next() {
+	public Position next() {
 		if(!path.isEmpty()) {
-			Point ret = path.get(0);
+			Position ret = path.get(0);
 			path.remove(0);
 			return ret;
 		}
@@ -150,7 +184,7 @@ public class AStarSearch {
 	}
 	
 	//helper functions	
-	private AStarNode previousNodeWithPointInList(ArrayList<AStarNode> nodes, Point p) {
+	private AStarNode previousNodeWithPointInList(ArrayList<AStarNode> nodes, Position p) {
 		for(AStarNode node : nodes) {
 			if(p.equals(node.position)) return node;
 		}
@@ -160,11 +194,11 @@ public class AStarSearch {
 	//helper class
 	private class AStarNode {
 		public AStarNode parent;
-		public Point position;
+		public Position position;
 		public int costSoFar;
 		public int estimatedTotalCost;
 		
-		public AStarNode(AStarNode parent, Point position, int costSoFar, int estimatedTotalCost) {
+		public AStarNode(AStarNode parent, Position position, int costSoFar, int estimatedTotalCost) {
 			this.parent = parent;
 			this.position = position;
 			this.costSoFar = costSoFar;

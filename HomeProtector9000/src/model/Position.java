@@ -11,4 +11,8 @@ public class Position {
 		this.direction = d;
 	}
 	
+	
+	public boolean equals(Position p) {
+		return this.point.equals(p.point) && this.direction == p.direction;
+	}
 }

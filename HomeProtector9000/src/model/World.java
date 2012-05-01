@@ -94,7 +94,7 @@ public class World {
 		ArrayList<Point> ret = new ArrayList<Point>();
 		
 		if(p.x + 1 < this.getWidth()) ret.add(new Point(p.x + 1, p.y));
-		if(p.y + 1 < this.getWidth()) ret.add(new Point(p.x, p.y + 1));
+		if(p.y + 1 < this.getHeight()) ret.add(new Point(p.x, p.y + 1));
 		if(p.x - 1 >= 0) ret.add(new Point(p.x - 1, p.y));
 		if(p.y - 1 >= 0) ret.add(new Point(p.x, p.y - 1));
 		
@@ -154,6 +154,12 @@ public class World {
 		case MOVE:
 			this.executeMoveAction(a);
 			break;
+		case TURNCLOCKWISE:
+			this.executeTurnClockwiseAction(a);
+			break;
+		case TURNCOUNTERCLOCKWISE:
+			this.executeTurnCounterClockwiseAction(a);
+			break;
 		}
 	}
 	public void executeSuckAction(Action a) {
@@ -204,5 +210,11 @@ public class World {
 		} else {
 			this.worldGrid[bot.getY()][bot.getX()] = bot;
 		}
+	}
+	public void executeTurnClockwiseAction(Action a) {
+		this.bot.setPosition(this.bot.getPosition().point, this.bot.getPosition().direction.clockwiseDirection());
+	}
+	public void executeTurnCounterClockwiseAction(Action a) {
+		this.bot.setPosition(this.bot.getPosition().point, this.bot.getPosition().direction.counterClockwiseDirection());
 	}
 }
