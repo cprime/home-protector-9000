@@ -5,6 +5,7 @@ import java.awt.Point;
 import model.Action;
 import model.ActionFactory;
 import model.Bot;
+import model.Direction;
 import model.Model;
 import model.World;
 
@@ -66,6 +67,10 @@ public abstract class AiState implements AStarSearchDelegate {
 	
 	public int heuristic(Point p, Point goal) {
 		return Math.abs(p.x - goal.x) + Math.abs(p.y - goal.y);
+	}
+	
+	public boolean directionIsClockwiseToDirection(Direction from, Direction to) {
+		return from.clockwiseDirection() == to;
 	}
 
 	public abstract Action action();

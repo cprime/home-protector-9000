@@ -7,7 +7,8 @@ import ai.AiState;
 
 public class ProtectorBot extends Model implements Bot {
 	private final int fullyChargedPowerLevel = 100;
-	private final int movementCost = 2;
+	private final int movementCost = 4;
+	private final int turnCost = 1;
 	
 	private int powerLevel;
 	private boolean hasExtinguisher;
@@ -72,7 +73,7 @@ public class ProtectorBot extends Model implements Bot {
 		
 		setPowerLevel(fullyChargedPowerLevel);
 		setHasExtinguisher(false);
-		setDirection(Direction.SOUTH);
+		setPosition(new Position(new Point(x, y), Direction.SOUTH));
 	}
 
 	public ArrayList<Action> validActions(World w) {
@@ -130,11 +131,23 @@ public class ProtectorBot extends Model implements Bot {
 		
 		this.setX(x);
 		this.setY(y);
+		this.setPosition(new Position(new Point(x, y), this.position.direction));
 	}
 	public void moveBy(int dx, int dy) {
 		this.setX(this.getX() + dx);
 		this.setY(this.getY() + dy);
+		this.setPosition(new Position(new Point(this.getX(), this.getY()), this.position.direction));
 		
 		this.powerLevel -= movementCost * ((Math.abs(dx) + Math.abs(dy)));
+	}
+	public void turnClockwise() {
+		this.position.direction = this.position.direction.clockwiseDirection();
+		
+		this.powerLevel -= turnCost;
+	}
+	public void turnCounterClockwise() {
+		this.position.direction = this.position.direction.counterClockwiseDirection();
+		
+		this.powerLevel -= turnCost;
 	}
 }

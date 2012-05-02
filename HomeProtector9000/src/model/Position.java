@@ -15,4 +15,8 @@ public class Position {
 	public boolean equals(Position p) {
 		return this.point.equals(p.point) && this.direction == p.direction;
 	}
+	
+	public String toString() {
+		return new String("<" + direction + ": " + point + ">");
+	}
 }

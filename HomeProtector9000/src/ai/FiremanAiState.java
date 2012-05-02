@@ -6,8 +6,10 @@ import java.util.ArrayList;
 import model.Action;
 import model.ActionFactory;
 import model.Bot;
+import model.Direction;
 import model.Fire;
 import model.Model;
+import model.Position;
 import model.World;
 
 public class FiremanAiState extends AiState implements SimpleSearchDelegate {
@@ -81,12 +83,30 @@ public class FiremanAiState extends AiState implements SimpleSearchDelegate {
 	}
 
 	//SimpleSearchDelegate method
-	public boolean isPointGoal(Point p) {
-		ArrayList<Point> pointsAround = this.getWorld().pointsArountPoint(p);
-		for(Point nearPoint : pointsAround) {
-			Model model = this.getWorld().objectAtPosition(nearPoint);
+	public boolean isPositionGoal(Position p) {
+		Point forward = null;
+		switch(p.direction) {
+		case NORTH:
+			forward = new Point(p.point.x, p.point.y - 1);
+			break;
+		case SOUTH:
+			forward = new Point(p.point.x, p.point.y + 1);
+			break;
+		case EAST:
+			forward = new Point(p.point.x + 1, p.point.y);
+			break;
+		case WEST:
+			forward = new Point(p.point.x - 1, p.point.y);
+			break;
+			default:
+				break;
+		}
+	
+		if(forward.x < this.getWorld().getWidth() && forward.y < this.getWorld().getHeight() && forward.x >= 0 && forward.y >= 0) {
+			Model model = this.getWorld().objectAtPosition(forward);
 			if(model instanceof Fire) return true;
 		}
+		
 		return false;
 	}
 }

@@ -212,9 +212,9 @@ public class World {
 		}
 	}
 	public void executeTurnClockwiseAction(Action a) {
-		this.bot.setPosition(this.bot.getPosition().point, this.bot.getPosition().direction.clockwiseDirection());
+		this.bot.turnClockwise();
 	}
 	public void executeTurnCounterClockwiseAction(Action a) {
-		this.bot.setPosition(this.bot.getPosition().point, this.bot.getPosition().direction.counterClockwiseDirection());
+		this.bot.turnCounterClockwise();
 	}
 }

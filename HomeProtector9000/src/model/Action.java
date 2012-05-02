@@ -62,6 +62,10 @@ public class Action {
 				return new String("<Replace to " + this.target + " at " + this.targetPoint + ">");
 			case MOVE:
 				return new String("<Move " + actorPoint + " to " + this.targetPoint + ">");
+			case TURNCLOCKWISE:
+				return new String("<Turn Clockwise>");
+			case TURNCOUNTERCLOCKWISE:
+				return new String("<Turn Counter Clockwise>");
 		}
 		return null;
 	}

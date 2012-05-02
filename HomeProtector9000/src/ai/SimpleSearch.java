@@ -3,7 +3,9 @@ package ai;
 import java.awt.Point;
 import java.util.ArrayList;
 
+import model.Direction;
 import model.Model;
+import model.Position;
 import model.World;
 
 public class SimpleSearch {
@@ -33,48 +35,73 @@ public class SimpleSearch {
 		this.setDelegate(delegate);
 	}
 	
-	public ArrayList<Point> positionsToExpandAroundPoint(Point p) {
-		ArrayList<Point> ret = new ArrayList<Point>();
+	public ArrayList<Position> positionsToExpandAroundPosition(Position p) {
+		ArrayList<Position> ret = new ArrayList<Position>();
 		
-		ArrayList<Point> basic = world.pointsArountPoint(p);
-		for(Point pointToAdd : basic) {
-			Model model = world.objectAtPosition(pointToAdd);
+		Point forward = null;
+		switch(p.direction) {
+		case NORTH:
+			forward = new Point(p.point.x, p.point.y - 1);
+			ret.add(new Position(p.point, Direction.EAST));
+			ret.add(new Position(p.point, Direction.WEST));
+			break;
+		case SOUTH:
+			forward = new Point(p.point.x, p.point.y + 1);
+			ret.add(new Position(p.point, Direction.EAST));
+			ret.add(new Position(p.point, Direction.WEST));
+			break;
+		case EAST:
+			forward = new Point(p.point.x + 1, p.point.y);
+			ret.add(new Position(p.point, Direction.NORTH));
+			ret.add(new Position(p.point, Direction.SOUTH));
+			break;
+		case WEST:
+			forward = new Point(p.point.x - 1, p.point.y);
+			ret.add(new Position(p.point, Direction.NORTH));
+			ret.add(new Position(p.point, Direction.SOUTH));
+			break;
+			default:
+				break;
+		}
+	
+		if(forward.x < this.world.getWidth() && forward.y < this.world.getHeight() && forward.x >= 0 && forward.y >= 0) {
+			Model model = world.objectAtPosition(forward);
 			if(model == null || model.canStackObject()) {
-				ret.add(pointToAdd);
+				ret.add(0, new Position(forward, p.direction));
 			}
 		}
 		
 		return ret;
 	}
 
-	public Point findPointClosestToGoal(Point start) {
-		ArrayList<Point> openList = new ArrayList<Point>();
-		ArrayList<Point> closedList = new ArrayList<Point>();
+	public Position findPositionClosestToGoal(Position start) {
+		ArrayList<Position> openList = new ArrayList<Position>();
+		ArrayList<Position> closedList = new ArrayList<Position>();
 		
 		openList.add(start);
 		
-		Point current = null;
+		Position current = null;
 		while(!openList.isEmpty()) {
 			current = openList.get(0);
 			
-			if(this.delegate.isPointGoal(current)) break;
+			if(this.delegate.isPositionGoal(current)) break;
 			
 			//connections
-			ArrayList<Point> pointsAroundCurrent = this.positionsToExpandAroundPoint(current);
-			for(Point endPoint : pointsAroundCurrent) {
-				if(closedList.contains(endPoint)) {
+			ArrayList<Position> positionsAroundCurrent = this.positionsToExpandAroundPosition(current);
+			for(Position endPosition : positionsAroundCurrent) {
+				if(closedList.contains(endPosition)) {
 					continue;
-				} else if(openList.contains(endPoint)) {
+				} else if(openList.contains(endPosition)) {
 					continue;
 				} else {
-					openList.add(endPoint);
+					openList.add(endPosition);
 				}
 			}
 			
 			openList.remove(current);
 			closedList.add(current);
 		}
-		if(this.delegate.isPointGoal(current)) return current;
+		if(this.delegate.isPositionGoal(current)) return current;
 		
 		return null;
 	}

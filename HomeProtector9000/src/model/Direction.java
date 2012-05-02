@@ -36,4 +36,22 @@ public enum Direction {
 		}
 		return this;
 	}
+	
+	public String toString() {
+		switch(this) {
+		case NORTH:
+			return "NORTH";
+		case EAST:
+			return "EAST";
+		case SOUTH:
+			return "SOUTH";
+		case WEST:
+			return "WEST";
+		case NONE:
+			return "NONE";
+		case UNKNOWN:
+			return "UNKNOWN";
+		}
+		return "UNKNOWN";
+	}
 }

@@ -45,7 +45,7 @@ public class AStarSearch {
 		this.initialized = false;
 	}
 	
-	public ArrayList<Position> positionsToExpandAroundPoint(Position p) {
+	public ArrayList<Position> positionsToExpandAroundPosition(Position p) {
 		ArrayList<Position> ret = new ArrayList<Position>();
 		
 		Point forward = null;
@@ -114,9 +114,9 @@ public class AStarSearch {
 			if(current.position.equals(goal)) break;
 			
 			//connections
-			ArrayList<Position> pointsAroundCurrent = this.positionsToExpandAroundPoint(current.position);
-			for(Position endPosition : pointsAroundCurrent) {
-				int endPositionCost = current.costSoFar + connectionWeight;
+			ArrayList<Position> positionsAroundCurrent = this.positionsToExpandAroundPosition(current.position);
+			for(Position endPosition : positionsAroundCurrent) {
+				int endPositionCost = current.costSoFar + this.connectionWeight(current.position, endPosition);
 				
 				//if a node with endPoint has been closed or opened previously, at a higher cost, remove node from closed list and reuse them
 				AStarNode endNode = null;
@@ -189,6 +189,13 @@ public class AStarSearch {
 			if(p.equals(node.position)) return node;
 		}
 		return null;
+	}
+	
+	private int connectionWeight(Position start, Position end) {
+		int ret = 0;
+		if(start.direction != end.direction) ret += 1;
+		if(start.point.equals(end.point)) ret += 1;
+		return ret;
 	}
 	
 	//helper class

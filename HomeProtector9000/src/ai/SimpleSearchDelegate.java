@@ -1,7 +1,7 @@
 package ai;
 
-import java.awt.Point;
+import model.Position;
 
 public interface SimpleSearchDelegate {
-	public boolean isPointGoal(Point p);
+	public boolean isPositionGoal(Position p);
 }
