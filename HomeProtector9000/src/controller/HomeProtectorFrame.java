@@ -54,11 +54,12 @@ public class HomeProtectorFrame extends JFrame implements ActionsPanelDelegate, 
 	private ArrayList<Model> defaultObjects() {
 		ArrayList<Model> ret = new ArrayList<Model>();
 		
+		//protector bot
 		ProtectorBot bot = new ProtectorBot(9, 5);
 		ret.add(bot);
 		this.worldModel.setBot(bot);
 		
-		//add base station and protector bot
+		//add base station
 		BaseStation baseStation = new BaseStation(0, 5);
 		baseStation.setHasExtinguisher(true);
 		ret.add(baseStation);
@@ -67,7 +68,7 @@ public class HomeProtectorFrame extends JFrame implements ActionsPanelDelegate, 
 		ArrayList<Point> openPoints = openPoints();
 		Random generator = new Random();
 		//add dirt
-		for(int i = 0; i < 20 && !openPoints.isEmpty(); i++) {
+		for(int i = 0; i < 10 && !openPoints.isEmpty(); i++) {
 			int r = Math.abs(generator.nextInt()) % openPoints.size();
 			Point p = openPoints.get(r);
 			Dirt d = new Dirt(p.x, p.y);
@@ -76,22 +77,13 @@ public class HomeProtectorFrame extends JFrame implements ActionsPanelDelegate, 
 		}
 		
 		//add obstructions
-		for(int i = 0; i < 30 && !openPoints.isEmpty(); i++) {
+		for(int i = 0; i < 20 && !openPoints.isEmpty(); i++) {
 			int r = Math.abs(generator.nextInt()) % openPoints.size();
 			Point p = openPoints.get(r);
 			Obstruction o = new Obstruction(p.x, p.y);
 			ret.add(o);
 			openPoints.remove(r);
 		}
-		
-//		//add fire
-//		for(int i = 0; i < 10 && !openPoints.isEmpty(); i++) {
-//			int r = Math.abs(generator.nextInt()) % openPoints.size();
-//			Point p = openPoints.get(r);
-//			Fire f = new Fire(p.x, p.y);
-//			ret.add(f);
-//			openPoints.remove(r);
-//		}
 		
 		return ret;
 	}

@@ -1,11 +1,8 @@
 package ai;
 
-import java.awt.Point;
-
 import model.Action;
 import model.ActionFactory;
 import model.Bot;
-import model.Direction;
 import model.Dirt;
 import model.Model;
 import model.Position;
@@ -22,19 +19,21 @@ public class NormalAiState extends AiState implements SimpleSearchDelegate {
 		simpleSearch = new SimpleSearch(this.getWorld(), this);
 	}
 	
-	public Action setupNewGoal() {
+	private Action setupNewGoal() {
 		Bot bot = this.getBot();
 		Position start = bot.getPosition();
 		AStarSearch pathFinder = this.getPathFinder();
 		ActionFactory factory = this.getFactory();
 		
+		//assume current position is not goal (based on action())
 		System.out.println("Starting Position: " + start);
 		this.goal = this.simpleSearch.findPositionClosestToGoal(start);
-		System.out.println("Goal: " + this.goal);
 		if(this.goal != null) {
+			System.out.println("Goal: " + this.goal);
 			pathFinder.initializeAStarPath(start, this.goal);
 			System.out.println("Path: " + pathFinder.getPath());
 			Position nextPos = pathFinder.next();
+			
 			if(nextPos != null) {
 				if(nextPos != null && nextPos.point.equals(start.point)) {
 					if(this.directionIsClockwiseToDirection(bot.getPosition().direction, nextPos.direction)) {
@@ -52,7 +51,6 @@ public class NormalAiState extends AiState implements SimpleSearchDelegate {
 		
 		System.out.println(this.getBot() + " is now blocked from dirt while performing normal business. Waiting for the user to un-block him.");
 		return factory.waitAction();
-		
 	}
 
 	@Override
@@ -64,10 +62,12 @@ public class NormalAiState extends AiState implements SimpleSearchDelegate {
 		World w = this.getWorld();
 		Model m = w.objectAtPosition(botPosition.point);
 		
-		if((this.goal == null || !botPosition.point.equals(this.goal.point)) && m != bot && m instanceof Dirt) {
+		if(m != null && m != bot && m instanceof Dirt) {
+			this.goal = null;
+			pathFinder.reset();
 			return factory.suckAction(m);
 		} else if(this.goal != null) {
-			if(bot.getPosition().point.equals(this.goal.point)) {
+			if(botPosition.point.equals(this.goal.point)) {
 				if(m != null && m instanceof Dirt) {
 					this.goal = null;
 					pathFinder.reset();
@@ -76,7 +76,7 @@ public class NormalAiState extends AiState implements SimpleSearchDelegate {
 			} else {
 				Position nextPos = pathFinder.next();
 				if(nextPos != null) {
-					if(nextPos != null && nextPos.point.equals(botPosition.point)) {
+					if(nextPos.point.equals(botPosition.point)) {
 						if(this.directionIsClockwiseToDirection(bot.getPosition().direction, nextPos.direction)) {
 							return factory.turnClockwiseAction();
 						}

@@ -1,12 +1,10 @@
 package ai;
 
 import java.awt.Point;
-import java.util.ArrayList;
 
 import model.Action;
 import model.ActionFactory;
 import model.Bot;
-import model.Direction;
 import model.Fire;
 import model.Model;
 import model.Position;
@@ -14,7 +12,7 @@ import model.World;
 
 public class FiremanAiState extends AiState implements SimpleSearchDelegate {
 	private SimpleSearch simpleSearch;
-	private Point goal;
+	private Position goal;
 	
 	public FiremanAiState(Bot bot, World world) {
 		super(bot, world);
@@ -23,22 +21,38 @@ public class FiremanAiState extends AiState implements SimpleSearchDelegate {
 		simpleSearch = new SimpleSearch(this.getWorld(), this);
 	}
 	
-	public Action setupNewGoal() {
-		Point start = this.getBot().getPoint();
+	private Action setupNewGoal() {
+		Bot bot = this.getBot();
+		Position start = bot.getPosition();
 		AStarSearch pathFinder = this.getPathFinder();
 		ActionFactory factory = this.getFactory();
 		
-		this.goal = this.simpleSearch.findPointClosestToGoal(start);
+		//assume current position is not goal (based on action())
+		System.out.println("Starting Position: " + start);
+		this.goal = this.simpleSearch.findPositionClosestToGoal(start);
 		if(this.goal != null) {
+			System.out.println("Goal: " + this.goal);
 			pathFinder.initializeAStarPath(start, this.goal);
-			return factory.moveAction(start, pathFinder.next());  //assume there is one because there is a goal
+			System.out.println("Path: " + pathFinder.getPath());
+			Position nextPos = pathFinder.next();
+			
+			if(nextPos != null) {
+				if(nextPos != null && nextPos.point.equals(start.point)) {
+					if(this.directionIsClockwiseToDirection(bot.getPosition().direction, nextPos.direction)) {
+						return factory.turnClockwiseAction();
+					}
+					return factory.turnCounterClockwiseAction();
+				} else if(this.validMovePosition(this.getWorld(), nextPos.point)) {
+					return factory.moveAction(start.point, nextPos.point);
+				}
+			}
 		} else if(!this.getWorld().containsFire()) {
 			System.out.println("No more fire to extinguish. I should probably do something else...");
 			return factory.waitAction();
-		} else {
-			System.out.println(this.getBot() + " is now blocked from fire while fighting fire. Waiting for the user to un-block him.");
-			return factory.waitAction();
 		}
+		
+		System.out.println(this.getBot() + " is now blocked from fire while fighting fire. Waiting for the user to un-block him.");
+		return factory.waitAction();
 	}
 
 	@Override
@@ -46,21 +60,24 @@ public class FiremanAiState extends AiState implements SimpleSearchDelegate {
 		AStarSearch pathFinder = this.getPathFinder();
 		ActionFactory factory = this.getFactory();
 		Bot bot = this.getBot();
+		Position botPosition = bot.getPosition();
 		World w = this.getWorld();
 		
-		if(this.isPointGoal(bot.getPoint())) {
-			ArrayList<Point> pointsAround = this.getWorld().pointsArountPoint(bot.getPoint());
-			for(Point nearPoint : pointsAround) {
-				Model model = this.getWorld().objectAtPosition(nearPoint);
+		if(this.isPositionGoal(botPosition)) {
+			Point forwardPoint = this.forwardPointFromPosition(botPosition);
+			if(forwardPoint != null) {
+				Model model = this.getWorld().objectAtPosition(forwardPoint);
 				if(model instanceof Fire)  {
+					this.goal = null;
+					pathFinder.reset();
 					return factory.blowAction(model);
 				}
 			}
 		} else if(this.goal != null) {
-			if(bot.getPoint().equals(this.goal)) {
-				ArrayList<Point> pointsAround = this.getWorld().pointsArountPoint(bot.getPoint());
-				for(Point nearPoint : pointsAround) {
-					Model model = this.getWorld().objectAtPosition(nearPoint);
+			if(botPosition.point.equals(this.goal.point)) {
+				Point forwardPoint = this.forwardPointFromPosition(botPosition);
+				if(forwardPoint != null) {
+					Model model = this.getWorld().objectAtPosition(forwardPoint);
 					if(model instanceof Fire)  {
 						this.goal = null;
 						pathFinder.reset();
@@ -68,8 +85,16 @@ public class FiremanAiState extends AiState implements SimpleSearchDelegate {
 					}
 				}
 			} else {
-				if(this.validMovePosition(w, pathFinder.peek())) {
-					return factory.moveAction(bot.getPoint(), pathFinder.next());
+				Position nextPos = pathFinder.next();
+				if(nextPos != null) {
+					if(nextPos.point.equals(botPosition.point)) {
+						if(this.directionIsClockwiseToDirection(bot.getPosition().direction, nextPos.direction)) {
+							return factory.turnClockwiseAction();
+						}
+						return factory.turnCounterClockwiseAction();
+					} else if(this.validMovePosition(w, nextPos.point)) {
+						return factory.moveAction(botPosition.point, nextPos.point);
+					}
 				}
 			}
 		}
@@ -81,9 +106,8 @@ public class FiremanAiState extends AiState implements SimpleSearchDelegate {
 	public String prettyName() {
 		return "Fireman";
 	}
-
-	//SimpleSearchDelegate method
-	public boolean isPositionGoal(Position p) {
+	
+	private Point forwardPointFromPosition(Position p) {
 		Point forward = null;
 		switch(p.direction) {
 		case NORTH:
@@ -103,6 +127,18 @@ public class FiremanAiState extends AiState implements SimpleSearchDelegate {
 		}
 	
 		if(forward.x < this.getWorld().getWidth() && forward.y < this.getWorld().getHeight() && forward.x >= 0 && forward.y >= 0) {
+			return forward;
+		}
+		
+		return null;
+	}
+
+	//SimpleSearchDelegate method
+	@Override
+	public boolean isPositionGoal(Position p) {
+		Point forward = this.forwardPointFromPosition(p);
+	
+		if(forward != null) {
 			Model model = this.getWorld().objectAtPosition(forward);
 			if(model instanceof Fire) return true;
 		}

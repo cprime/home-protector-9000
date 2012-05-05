@@ -74,7 +74,5 @@ public abstract class AiState implements AStarSearchDelegate {
 	}
 
 	public abstract Action action();
-
-//	public abstract Action action(World w, Bot bot);
 	public abstract String prettyName();
 }

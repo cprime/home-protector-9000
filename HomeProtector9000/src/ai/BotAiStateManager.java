@@ -30,33 +30,35 @@ public class BotAiStateManager {
 	
 	public void updateBotAiState() {
 		AiState previousState = bot.getAiState();
-//		boolean fire = this.getWorld().containsFire();
-//		
-//		if(((ProtectorBot)this.bot).isLowPowered()) {
-//			if(previousState == null || !(previousState instanceof SeekRechargeAiState)) {
-//				System.out.println("Switching to state: SeekRechargeAiState");
-//				bot.setAiState(new SeekRechargeAiState(bot, world));
-//			}
-//		} else if(fire && !((ProtectorBot)this.bot).hasExtinguisher()) {
-//			if(previousState == null || !(previousState instanceof PickupExtinguisherAiState)) {
-//				System.out.println("Switching to state: PickupExtinguisherAiState");
-//				bot.setAiState(new PickupExtinguisherAiState(bot, world));
-//			}
-//		} else if(fire && ((ProtectorBot)this.bot).hasExtinguisher()) {
-//			if(previousState == null || !(previousState instanceof FiremanAiState)) {
-//				System.out.println("Switching to state: FiremanAiState");
-//				bot.setAiState(new FiremanAiState(bot, world));
-//			}
-//		} else if(!fire && ((ProtectorBot)this.bot).hasExtinguisher()) {
-//			if(previousState == null || !(previousState instanceof ReplaceExtinguisherAiState)) {
-//				System.out.println("Switching to state: ReplaceExtinguisherAiState");
-//				bot.setAiState(new ReplaceExtinguisherAiState(bot, world));
-//			}
-//		} else {
+		boolean fire = this.getWorld().containsFire();
+		
+		if(!(this.bot instanceof ProtectorBot)) return;
+		
+		if(((ProtectorBot)this.bot).isLowPowered()) {
+			if(previousState == null || !(previousState instanceof SeekRechargeAiState)) {
+				System.out.println("Switching to state: SeekRechargeAiState");
+				bot.setAiState(new SeekRechargeAiState(bot, world));
+			}
+		} else if(fire && !((ProtectorBot)this.bot).hasExtinguisher()) {
+			if(previousState == null || !(previousState instanceof PickupExtinguisherAiState)) {
+				System.out.println("Switching to state: PickupExtinguisherAiState");
+				bot.setAiState(new PickupExtinguisherAiState(bot, world));
+			}
+		} else if(fire && ((ProtectorBot)this.bot).hasExtinguisher()) {
+			if(previousState == null || !(previousState instanceof FiremanAiState)) {
+				System.out.println("Switching to state: FiremanAiState");
+				bot.setAiState(new FiremanAiState(bot, world));
+			}
+		} else if(!fire && ((ProtectorBot)this.bot).hasExtinguisher()) {
+			if(previousState == null || !(previousState instanceof ReplaceExtinguisherAiState)) {
+				System.out.println("Switching to state: ReplaceExtinguisherAiState");
+				bot.setAiState(new ReplaceExtinguisherAiState(bot, world));
+			}
+		} else {
 			if(previousState == null || !(previousState instanceof NormalAiState)) {
 				System.out.println("Switching to state: NormalAiState");
 				bot.setAiState(new NormalAiState(bot, world));
 			}
 		}
-//	}
+	}
 }

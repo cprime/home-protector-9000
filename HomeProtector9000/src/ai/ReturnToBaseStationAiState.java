@@ -19,26 +19,28 @@ public abstract class ReturnToBaseStationAiState extends AiState {
 		AStarSearch pathFinder = this.getPathFinder();
 		ActionFactory factory = this.getFactory();
 		Bot bot = this.getBot();
+		Position botPosition = bot.getPosition();
 		World w = this.getWorld();
 		BaseStation station = w.getStation();
 		
-		if(station.getPoint().equals(bot.getPosition().point)) {
+		Position nextPos = pathFinder.next();
+		if(station.getPoint().equals(botPosition.point)) {
 			return this.baseStationAction();
 		}
-		else if(!pathFinder.isInitialized() || !this.validMovePosition(w, pathFinder.peek().point)) {
-			pathFinder.initializeAStarPath(bot.getPosition(), new Position(station.getPoint(), Direction.NONE));
+		else if(nextPos == null || !this.validMovePosition(w, nextPos.point)) {
+			pathFinder.initializeAStarPath(botPosition, new Position(station.getPoint(), Direction.NONE));
+			nextPos = pathFinder.next();
 		}
 		
-		if(pathFinder.peek() != null && pathFinder.peek().equals(bot.getPosition().point)) {
-			if((pathFinder.peek().direction == Direction.NORTH && bot.getPosition().direction == Direction.WEST) ||
-					(pathFinder.peek().direction == Direction.EAST && bot.getPosition().direction == Direction.NORTH) ||
-					(pathFinder.peek().direction == Direction.SOUTH && bot.getPosition().direction == Direction.EAST) ||
-					(pathFinder.peek().direction == Direction.WEST && bot.getPosition().direction == Direction.SOUTH)) {
-				return factory.turnClockwiseAction();
+		if(nextPos != null) {
+			if(nextPos.point.equals(botPosition.point)) {
+				if(this.directionIsClockwiseToDirection(botPosition.direction, nextPos.direction)) {
+					return factory.turnClockwiseAction();
+				}
+				return factory.turnCounterClockwiseAction();
+			} else if(this.validMovePosition(w, nextPos.point)) {
+				return factory.moveAction(botPosition.point, nextPos.point);
 			}
-			return factory.turnCounterClockwiseAction();
-		} else if(this.validMovePosition(w, pathFinder.peek().point)) {
-			return factory.moveAction(bot.getPosition().point, pathFinder.next().point);
 		}
 		
 		System.out.println(bot + " is now blocked while returning to base. Waiting for the user to un-block him.");

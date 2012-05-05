@@ -12,8 +12,12 @@ public class Position {
 	}
 	
 	
-	public boolean equals(Position p) {
-		return this.point.equals(p.point) && this.direction == p.direction;
+	public boolean equals(Object anObject) {
+		if(anObject instanceof Position) {
+			Position p = (Position)anObject;
+			return this.point.equals(p.point) && this.direction == p.direction;
+		}
+		return false;
 	}
 	
 	public String toString() {

@@ -9,7 +9,8 @@ import model.Position;
 import model.World;
 
 public class AStarSearch {
-	private final int connectionWeight = 1;
+	private final int moveWeight = 2;
+	private final int turnWeight = 1;
 	
 	private World world;
 	private AStarSearchDelegate delegate;
@@ -111,7 +112,7 @@ public class AStarSearch {
 				if(testNode.estimatedTotalCost < current.estimatedTotalCost) current = testNode; 
 			}
 			
-			if(current.position.equals(goal)) break;
+			if(this.positionEqualsPosition(current.position, goal)) break;
 			
 			//connections
 			ArrayList<Position> positionsAroundCurrent = this.positionsToExpandAroundPosition(current.position);
@@ -141,7 +142,7 @@ public class AStarSearch {
 			closedList.add(current);
 		}
 		
-		if(current.position.equals(goal)) {
+		if(this.positionEqualsPosition(current.position, goal)) {
 			AStarNode checking = current;
 			while(checking != startingNode) {
 				if(path.isEmpty()) {
@@ -168,14 +169,14 @@ public class AStarSearch {
 	}
 	
 	public Position peek() {
-		if(!path.isEmpty()) {
+		if(path != null && !path.isEmpty()) {
 			return path.get(0);
 		}
 		return null;
 	}
 	
 	public Position next() {
-		if(!path.isEmpty()) {
+		if(path != null && !path.isEmpty()) {
 			Position ret = path.get(0);
 			path.remove(0);
 			return ret;
@@ -191,11 +192,21 @@ public class AStarSearch {
 		return null;
 	}
 	
+	//an okay weight function
 	private int connectionWeight(Position start, Position end) {
 		int ret = 0;
-		if(start.direction != end.direction) ret += 1;
-		if(start.point.equals(end.point)) ret += 1;
+		if(start.direction != end.direction) ret += turnWeight;
+		ret += (Math.abs(start.point.x - end.point.x) * moveWeight);
+		ret += (Math.abs(start.point.y - end.point.y) * moveWeight);
+		
 		return ret;
+	}
+	
+	private boolean positionEqualsPosition(Position a, Position b) {
+		if(a.direction == Direction.NONE || b.direction == Direction.NONE) {
+			return a.point.equals(b.point);
+		}
+		return a.point.equals(b.point) && a.direction == b.direction;
 	}
 	
 	//helper class

@@ -36,7 +36,7 @@ public class ActionsPanel extends JPanel implements ActionListener {
 	public ActionsPanel() {
 		super();
 		
-		toggleActivityButton = new JButton("            Start            ");
+		toggleActivityButton = new JButton("             Start             ");
 		toggleActivityButton.addActionListener(this);
 		this.add(toggleActivityButton);
 		
@@ -116,11 +116,11 @@ public class ActionsPanel extends JPanel implements ActionListener {
 		} else if(source == toggleActivityButton) {
 			if(!activityOn) {
 				activityOn = true;
-				toggleActivityButton.setText("Pause");
+				toggleActivityButton.setText("            Pause            ");
 				delegate.start();
 			} else {
 				activityOn = false;
-				toggleActivityButton.setText("Resume");
+				toggleActivityButton.setText("            Resume            ");
 				delegate.stop();
 			}
 		}

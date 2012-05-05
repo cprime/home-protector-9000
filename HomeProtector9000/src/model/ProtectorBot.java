@@ -7,7 +7,7 @@ import ai.AiState;
 
 public class ProtectorBot extends Model implements Bot {
 	private final int fullyChargedPowerLevel = 100;
-	private final int movementCost = 4;
+	private final int movementCost = 2;
 	private final int turnCost = 1;
 	
 	private int powerLevel;
