@@ -118,25 +118,25 @@ public class HomeProtectorFrame extends JFrame implements ActionsPanelDelegate, 
 		this.add(stateValue);
 		
 		energyLabel = new JLabel("Power:", (int)Component.CENTER_ALIGNMENT);
-		energyLabel.setBounds(585, 130, 100, 40);
+		energyLabel.setBounds(585, 110, 100, 40);
 		energyLabel.setFont(font);
 		this.add(energyLabel);
 		energyValue = new EnergyLevelPanel(worldModel.getBot());
-		energyValue.setBounds(585, 170, 100, 40);
+		energyValue.setBounds(585, 150, 100, 40);
 		this.add(energyValue);
 		
 		inventoryLabel = new JLabel("Extinguisher:", (int)Component.CENTER_ALIGNMENT);
-		inventoryLabel.setBounds(720, 130, 150, 40);
+		inventoryLabel.setBounds(720, 110, 150, 40);
 		inventoryLabel.setFont(font);
 		this.add(inventoryLabel);
 		inventoryValue = new JLabel("Unequipped", (int)Component.CENTER_ALIGNMENT);
-		inventoryValue.setBounds(720, 170, 150, 30);
+		inventoryValue.setBounds(720, 150, 150, 30);
 		inventoryValue.setFont(font);
 		this.add(inventoryValue);
 		
-		actionsLabel = new JLabel("Actions:", (int)Component.CENTER_ALIGNMENT);
+		actionsLabel = new JLabel("User Actions:", (int)Component.CENTER_ALIGNMENT);
 		actionsLabel.setBounds(600, 250, 250, 40);
-		actionsLabel.setFont(font);
+		actionsLabel.setFont(new Font(null, Font.BOLD, 30));
 		this.add(actionsLabel);
 		
 		actionsPanel = new ActionsPanel();
